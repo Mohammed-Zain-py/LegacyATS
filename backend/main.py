@@ -36,6 +36,18 @@ async def analyze_resume(
         })
 
     file_bytes = await file.read()
+
+    MAX_FILE_SIZE = 5*1024*1024  #5MB
+
+    if len(file_bytes) > MAX_FILE_SIZE:
+        return JSONResponse(
+            status_code = 400,
+            content={
+                "status": "error",
+                "score" : 0,
+                "feedback" : "File too large. Maximum supported size is 5MB"
+            }
+        )
     parser_result = extract_text_from_pdf(file_bytes)
     
     if parser_result["status"] == "error":
