@@ -79,7 +79,7 @@ LEGACYATS
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Mohammed-Zain-py/LegacyATS.git
 cd LEGACYATS
 ```
 
@@ -151,3 +151,13 @@ pytest
 * Compatibility scores should not be treated as actual recruiter decisions.
 * AI-based resume improvements require a user-provided Gemini API key.
 * The parser intentionally reproduces limitations commonly associated with older ATS workflows.
+
+---
+
+## License
+
+This project is publicly available for learning, personal use, testing, and direct usage through the deployed application.
+
+Please do not republish, redistribute, or present this project as your own work.
+
+See the LICENSE file for full terms.
