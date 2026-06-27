@@ -44,9 +44,9 @@ api_key = st.sidebar.text_input("Enter Gemini API Key", type="password", placeho
 st.sidebar.markdown("---")
 st.sidebar.markdown("**System Limits:**")
 st.sidebar.markdown("- 5 requests per minute limit.")
-st.sidebar.markdown("- Max file size: 200MB.")
+st.sidebar.markdown("- Max file size: 5MB.")
 
-st.title("LegacyATS: Gatekeeper Assessment Matrix")
+st.title("LegacyATS: ATS Resume Analyzer")
 
 # 4. Tabs Routing (Recruiter Landing Page First)
 tab1, tab2 = st.tabs(["Interactive Recruiter Workspace", "Live ATS Analysis Pipeline"])
@@ -62,39 +62,62 @@ with tab1:
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("### See the System Fail")
-    st.markdown("Click below to simulate how the system reads a candidate's file:")
+    st.markdown("### Legacy ATS Parsing Simulation")
+    st.markdown("Run a simulated legacy ATS parse to see how a multi-column resume can become corrupted during extraction.")
     
     if st.button("Trigger Pipeline Failure Simulation", type="secondary"):
-        with st.spinner("Calling backend..."):
-            try:
-                response = requests.post("http://127.0.0.1:8000/mock-demo")
-                if response.status_code == 200:
-                    mock_data = response.json()
-                    
-                    st.markdown(f"""
-                    <div class="score-banner">
-                        <h2 style="margin:0; color:#ff7b72;">Simulated Profile Score: {mock_data['score']}/100</h2>
-                        <p style="margin:5px 0 0 0; color:#ff7b72; font-size: 18px;"><strong>Status:</strong> Rejected - Formatting Error</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    st.markdown("### Why did it fail?")
-                    st.markdown("The old system cannot read columns. It crushes all the text together into a mess. Because of this, it cannot find the right keywords.")
-                    
-                    st.markdown("**What the database actually sees:**")
-                    st.markdown(f'<div class="correction-terminal">{mock_data["raw_text"]}</div>', unsafe_allow_html=True)
-                    
-                    st.markdown("**System Error Log:**")
-                    st.markdown(f'<div class="correction-terminal" style="color: #ff7b72;">{mock_data["feedback"]}</div>', unsafe_allow_html=True)
-                else:
-                    st.error(f"Error: {response.status_code}")
-            except Exception as e:
-                st.error("Mock endpoint unreachable. Ensure backend is running.")
+        with st.spinner("Running ATS simulation..."):
+
+            mock_data = {
+                "status": "rejected",
+                "score": 32,
+                "feedback": (
+                    "CRITICAL MINIMUM THRESHOLD FAILURE: Left-hand layout column collided with right-hand headers. "
+                    "Extracted keywords mapped 'Languages' into 'Project Timelines'. "
+                    "Parsing matrix failed to detect chronological progression. "
+                    "System profile flagged as un-indexable."
+                ),
+                "raw_text": (
+                    "MohammedZainEDUCATION"
+                    "mdzain0026@email.comPROJECTS"
+                    "CGPA:8.0SpeechDrivenNLU"
+                    "SKILLSPythonTimelineBuiltResumeChecker"
+                )
+            }
+
+            st.markdown(f"""
+            <div class="score-banner">
+                <h2 style="margin:0; color:#ff7b72;">Simulated Profile Score: {mock_data['score']}/100</h2>
+                <p style="margin:5px 0 0 0; color:#ff7b72; font-size:18px;">
+                    <strong>Status:</strong> Rejected - Formatting Error
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("### Why did it fail?")
+
+            st.markdown(
+                "The old system cannot read multi-column layouts. It flattened unrelated sections into a single stream of text, making important information impossible to interpret correctly."
+            )
+
+            st.markdown("**What the database actually sees:**")
+
+            st.markdown(
+                f'<div class="correction-terminal">{mock_data["raw_text"]}</div>',
+                unsafe_allow_html=True
+            )
+
+            st.markdown("**System Error Log:**")
+
+            st.markdown(
+                f'<div class="correction-terminal" style="color:#ff7b72;">{mock_data["feedback"]}</div>',
+                unsafe_allow_html=True
+            )
 
 # ---------------- TAB 2: LIVE ATS SCANNER ----------------
 with tab2:
     st.markdown("### Live Keyword Match Processing")
+    st.caption("First analysis may take up to 60 seconds if the demo backend is inactive.")
     st.markdown("Upload a technical resume and paste the target job requirements to see what keywords are missing and get an automated correction.")
     
     col1, col2 = st.columns([1, 1])
