@@ -138,7 +138,7 @@ with tab2:
                             files = {"file": (uploaded_file.name, uploaded_file.getvalue(), "application/pdf")}
                             data = {"api_key": api_key, "job_description": job_desc}
                             
-                            response = requests.post("http://127.0.0.1:8000/analyze".strip(), files=files, data=data)
+                            response = requests.post("https://legacyats.onrender.com/analyze", files=files, data=data)
                             
                             if response.status_code == 200:
                                 res = response.json()
