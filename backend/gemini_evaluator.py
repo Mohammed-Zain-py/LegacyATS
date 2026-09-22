@@ -1,7 +1,11 @@
+import os
 import json
 import logging
 import google.generativeai as genai
 from typing import Dict, Any
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger("gemini_evaluator")
 
@@ -11,7 +15,7 @@ def evaluate_resume_with_llm(raw_text: str, job_description: str, api_key: str) 
 
     try:
         genai.configure(api_key=api_key)
-        model_name = 'models/gemini-2.5-flash' 
+        model_name = os.getenv("GEMINI_MODEL", "models/gemini-3.6-flash")
         
         system_instruction = (
             "You are an uncompromising legacy corporate Applicant Tracking System (ATS). "

@@ -39,7 +39,7 @@ st.sidebar.markdown("""
 3. Click **Get API Key**.
 4. Create a key and paste it below.
 """)
-api_key = st.sidebar.text_input("Enter Gemini API Key", type="password", placeholder="AIzaSy...")
+api_key = st.sidebar.text_input("Enter Gemini API Key", type="password",)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("**System Limits:**")
